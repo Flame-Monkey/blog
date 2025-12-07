@@ -34,7 +34,8 @@ export default async function Post({
 }: {                                                            
   params: Promise<{ category: string, slug?: string }>;
 }) {
-  const { category, slug } = await params;
+  let { category, slug } = await params;
+  slug = slug?.toLowerCase();
   console.log(category);
   const postData = getPostData(slug!);
   const toc: TocItem[] = extractTocFromMarkdown(postData.content);
