@@ -15,13 +15,24 @@ export interface Post {
 }
 
 function walkDir(dir: string, fileList: string[] = []) {
-  const files = fs.readdirSync(dir);
+  const parent = path.dirname(dir);
+  const targetName = path.basename(dir).toLowerCase();
+
+  const realEntries = fs.readdirSync(parent, { withFileTypes: true });
+  const realMatch = realEntries.find(
+    (entry) => entry.isDirectory() && entry.name.toLowerCase() === targetName
+  );
+
+  const realDir = realMatch ? path.join(parent, realMatch.name) : dir;
+
+  const files = fs.readdirSync(realDir);
 
   files.forEach((file) => {
-    const fullPath = path.join(dir, file);
+    const fullPath = path.join(realDir, file);
+
     if (fs.statSync(fullPath).isDirectory()) {
-      walkDir(fullPath, fileList); // 재귀
-    } else if (file.endsWith(".mdx")) {
+      walkDir(fullPath, fileList);
+    } else if (file.toLowerCase().endsWith(".mdx")) {
       fileList.push(fullPath);
     }
   });
@@ -65,6 +76,7 @@ export function getSortedPostsData(): Omit<Post, "content">[] {
 
 
 export function getPostData(slug: string): Post {
+  slug = slug.toLowerCase();
   const filePaths = walkDir(postsDirectory);
 
   const fullPath = filePaths.find((p) =>
