@@ -27,7 +27,7 @@ export default async function Post() {
             {/* 가운데 컨텐츠 */}
             <div className="w-full mx-auto">
 
-                <BlogPost title={postData.title} date={postData.date}>
+                <BlogPost post={postData}>
                     <MDXRemote
                         source={postData.content}
                         components={{

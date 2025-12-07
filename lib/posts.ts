@@ -10,6 +10,7 @@ export interface Post {
   date: string
   category: string
   title: string
+  description: string
   content: string
 }
 
