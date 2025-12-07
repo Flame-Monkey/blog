@@ -60,7 +60,7 @@ export function getSortedPostsData(): Omit<Post, "content">[] {
     const { data } = matter(fileContents);
 
     const slug = path.basename(fullPath).replace(/\.mdx$/, "").toLowerCase();
-    const category = path.basename(path.dirname(fullPath)).toLowerCase(); // 바로 상위 폴더 이름
+    const category = path.basename(path.dirname(fullPath)); // 바로 상위 폴더 이름
 
     return {
       slug,
