@@ -41,7 +41,7 @@ export default function Navi({ categories }: { categories: string[] }) {
                         onPointerLeave={() => setOpen(false)}
                     >
                         <Link
-                            href="/blog"
+                            href="/Common"
                             className="px-3 py-2 hover:bg-gray-200 rounded transition"
                         >
                             문서

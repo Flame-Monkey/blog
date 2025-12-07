@@ -36,11 +36,7 @@ export default async function Post({
 }) {
   const { category, slug } = await params;
   console.log(category);
-  if(!slug)
-  {
-    return ("hello, world!!");
-  }
-  const postData = getPostData(slug);
+  const postData = getPostData(slug!);
   const toc: TocItem[] = extractTocFromMarkdown(postData.content);
 
   return (
