@@ -14,12 +14,12 @@ export default function Navi({ categories }: { categories: string[] }) {
             {/* 가운데 네비 전체 */}
             <div className="flex w-full items-center justify-between px-6">
 
-            <div className="flex items-center justify-start px-6 gap-6">
+                <div className="flex items-center justify-start px-6 gap-6">
 
-                <Link href="/" className="text-xl font-bold hover:opacity-70 transition">
-                    MAIN
-                </Link>
-            </div>
+                    <Link href="/" className="text-xl font-bold hover:opacity-70 transition">
+                        MAIN
+                    </Link>
+                </div>
 
                 <div className="flex items-center justify-end px-6 gap-2">
 
@@ -36,9 +36,12 @@ export default function Navi({ categories }: { categories: string[] }) {
                         onPointerEnter={() => setOpen(true)}
                         onPointerLeave={() => setOpen(false)}
                     >
-                        <button className="px-3 py-2 hover:bg-gray-200 rounded transition">
+                        <Link
+                            href="/blog"
+                            className="px-3 py-2 hover:bg-gray-200 rounded transition"
+                        >
                             문서
-                        </button>
+                        </Link>
 
                         {open && (
                             <div
