@@ -16,7 +16,7 @@ export interface Post {
 
 function walkDir(dir: string, fileList: string[] = []) {
   const parent = path.dirname(dir);
-  const targetName = path.basename(dir).toLowerCase();
+  const targetName = path.basename(dir);
 
   const realEntries = fs.readdirSync(parent, { withFileTypes: true });
   const realMatch = realEntries.find(

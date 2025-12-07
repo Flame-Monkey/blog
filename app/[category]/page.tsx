@@ -13,8 +13,7 @@ export default async function Post({
 }: {                                                            
   params: Promise<{ category: string }>;
 }) {
-  let { category } = await params;
-  category = category.toLowerCase();
+  const { category } = await params;
 
   // 모든 포스트 불러오기
   const posts = getSortedPostsData();
