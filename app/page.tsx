@@ -9,7 +9,7 @@ import rehypeSlug from 'rehype-slug'
 
 import CodeBlockCopyButton from '@/components/CodeBlockCopyButton'
 
-import { TocItem, extractTocFromMarkdown } from "@/lib/rehype-toc";
+import { TocItem, extractTocFromMarkdown } from "@/lib/extractToc";
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 
 export default async function Post() {

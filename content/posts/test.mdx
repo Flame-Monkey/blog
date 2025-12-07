@@ -9,6 +9,43 @@ category: 'temp'
 - hello,
 - world
 - byte
-``` python
+
+```python
 print('hello, world!!')
 ```
+
+---
+
+# 🎯 예상 TOC 결과 (중복 slug 처리 후)
+
+이 파일을 우리의 `extractTocFromMarkdown` 로 파싱하면:
+
+| Level | Text| ID          |
+|-------|------------------|-------------|
+| 1     | hello, category  | hello-category |
+| 1     | h1               | h1 |
+| 1     | h1               | h1-1 |
+| 1     | h1               | h1-2 |
+| 1     | h1               | h1-3 |
+| 1     | h1               | h1-4 |
+| 1     | h1               | h1-5 |
+| 1     | h1               | h1-6 |
+| 1     | h1               | h1-7 |
+| 1     | h1               | h1-8 |
+| ...   | ...              | ... |
+| 1     | h1               | h1-27 |
+
+이렇게 **고유한 id가 보장**된다.
+
+---
+
+# 📌 MDX 렌더링 후 HTML 구조 예상
+
+`rehype-slug` + `rehype-autolink-headings` 덕분에  
+각 제목은 아래처럼 되고:
+
+```html
+<h1 id="h1"></h1>
+<h1 id="h1-1"></h1>
+<h1 id="h1-2"></h1>
+...
