@@ -43,8 +43,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                             }}
                             options={{
                                 mdxOptions: {
-                                    remarkPlugins: [remarkGfm, remarkMath,
-                                        [remarkToc, { heading: 'The Table', maxDepth: 2, parents: ['listItem', 'root'], skip: 'delta' }]],
+                                    remarkPlugins: [remarkGfm, remarkMath,],
                                     rehypePlugins: [
                                         rehypePrettyCode,
                                         rehypeKatex,
@@ -52,15 +51,9 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                                         [
                                             rehypeAutolinkHeadings,
                                             {
-                                                behavior: "append",
+                                                behavior: "wrap",
                                                 properties: {
-                                                    className: ["anchor-link"],
-                                                },
-                                                content() {
-                                                    return {
-                                                        type: "text",
-                                                        value: " 🔗", // 아이콘(원하는 걸로 변경 가능)
-                                                    };
+                                                    style: "color: inherit; text-decoration: none;",
                                                 },
                                             },
                                         ],
