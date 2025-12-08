@@ -13,7 +13,6 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import CodeBlockCopyButton from "@/components/CodeBlockCopyButton";
 
 import { TocItem, extractTocFromMarkdown } from "@/lib/extractToc";
-import CategoryPage from "../page";
 import CategorySidebar from "@/components/CategorySidebar";
 
 import type { Metadata } from "next";

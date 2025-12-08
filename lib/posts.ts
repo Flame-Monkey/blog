@@ -8,7 +8,7 @@ const postsDirectory = path.join(process.cwd(), 'content/posts')
 export interface Post {
   slug: string
   date: string
-  category: string
+  category?: string
   title: string
   description: string
   content: string
@@ -61,17 +61,17 @@ export function getSortedPostsData(): Omit<Post, "content">[] {
 
     const slug = path.basename(fullPath).replace(/\.mdx$/, "").toLowerCase();
     const category = path.basename(path.dirname(fullPath)); // 바로 상위 폴더 이름
-
+  
     return {
       slug,
-      category: data.category || category, // front-matter 없으면 폴더명 사용
+      category: category,
       title: data.title,
       date: data.date,
       description: data.description,
     };
   });
 
-  return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1));
+  return allPostsData.filter((p)=>p.category!='posts').sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
 export function getPostsByCategory(category: string) {

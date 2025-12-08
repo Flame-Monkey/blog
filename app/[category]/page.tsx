@@ -1,8 +1,5 @@
 import { getSortedPostsData } from "@/lib/posts";
 import { redirect } from "next/navigation";
-import type { Metadata } from "next";
-import { getPostData } from "@/lib/posts";
-
 
 export async function generateStaticParams() {
   const posts = getSortedPostsData();
@@ -10,7 +7,6 @@ export async function generateStaticParams() {
     category: post.category,
   }));
 }
-
 
 export default async function Post({
   params,
