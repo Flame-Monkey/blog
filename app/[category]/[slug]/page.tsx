@@ -1,4 +1,4 @@
-import { getPostData, getSortedPostsData } from "@/lib/posts";
+import { getPostData, getPostDatac, getSortedPostsData } from "@/lib/posts";
 import BlogPost from "@/components/BlogPost";
 import PostToc from "@/components/PostToc";
 import { MDXRemote } from "next-mdx-remote/rsc";
@@ -52,9 +52,8 @@ export default async function Post({
   params: Promise<{ category: string, slug?: string }>;
 }) {
   let { category, slug } = await params;
-  slug = slug?.toLowerCase();
   console.log(category);
-  const postData = getPostData(slug!);
+  const postData = getPostDatac(category!, slug!);
   const toc: TocItem[] = extractTocFromMarkdown(postData.content);
 
   return (

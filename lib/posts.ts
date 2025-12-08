@@ -83,6 +83,36 @@ export function getPostsByCategory(category: string) {
 }
 
 
+export function getPostDatac(category: string, slug: string): Post {
+  slug = slug.toLowerCase();
+
+  let targetPath: string;
+
+  if (category && category.trim() !== "") {
+    // 카테고리 존재: content/posts/{category}/{slug}.mdx
+    targetPath = path.join(postsDirectory, category, `${slug}.mdx`);
+  } else {
+    // 카테고리 없음: content/posts/{slug}.mdx
+    targetPath = path.join(postsDirectory, `${slug}.mdx`);
+  }
+
+  // 파일 존재 확인
+  if (!fs.existsSync(targetPath)) {
+    throw new Error(`Post not found: ${category}/${slug}`);
+  }
+
+  const fileContents = fs.readFileSync(targetPath, "utf8");
+  const { data, content } = matter(fileContents);
+
+  return {
+    slug,
+    category,
+    title: data.title,
+    date: data.date,
+    description: data.description,
+    content,
+  };
+}
 
 export function getPostData(slug: string): Post {
   slug = slug.toLowerCase();
