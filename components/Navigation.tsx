@@ -12,16 +12,17 @@ export default function Navi({ categories }: { categories: string[] }) {
             <div></div>
 
             {/* 가운데 네비 전체 */}
-            <div className="flex w-full items-center justify-between px-6">
+            <div className="flex w-full items-center justify-between">
 
                 <div className="flex items-center justify-start px-6 gap-6">
 
-                    <Link href="/" className="text-xl font-bold hover:opacity-70 transition">
+                    <Link href="/" className="flex text-xl items-center font-bold hover:opacity-70 transition">
                         <img
                             src="https://avatars.githubusercontent.com/u/161662653?v=4"
                             alt="avatar"
                             className="w-12 h-12 rounded-full"
                         />
+                        <p>Main</p>
                     </Link>
                 </div>
 

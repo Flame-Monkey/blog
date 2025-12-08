@@ -16,6 +16,8 @@ import { TocItem, extractTocFromMarkdown } from "@/lib/extractToc";
 import CategoryPage from "../page";
 import CategorySidebar from "@/components/CategorySidebar";
 
+import type { Metadata } from "next";
+
 const prettyOptions = {
   theme: "github-dark-dimmed",
   keepBackground: true,
@@ -28,6 +30,20 @@ export async function generateStaticParams() {
     category: post.category,
     slug: post.slug,
   }));
+}
+
+export async function generateMetadata({
+  params,
+}: {                                                            
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const {slug} = await params;
+  const post = await getPostData(slug);
+
+  return {
+    title: post.title,
+    description: post.description,
+  };
 }
 
 export default async function Post({
