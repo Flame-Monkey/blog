@@ -20,7 +20,7 @@ function walkDir(dir: string, fileList: string[] = []) {
 
   const realEntries = fs.readdirSync(parent, { withFileTypes: true });
   const realMatch = realEntries.find(
-    (entry) => entry.isDirectory() && entry.name.toLowerCase() === targetName
+    (entry) => entry.isDirectory() && entry.name === targetName
   );
 
   const realDir = realMatch ? path.join(parent, realMatch.name) : dir;
@@ -32,7 +32,7 @@ function walkDir(dir: string, fileList: string[] = []) {
 
     if (fs.statSync(fullPath).isDirectory()) {
       walkDir(fullPath, fileList);
-    } else if (file.toLowerCase().endsWith(".mdx")) {
+    } else if (file.endsWith(".mdx")) {
       fileList.push(fullPath);
     }
   });
@@ -59,9 +59,9 @@ export function getSortedPostsData(): Omit<Post, "content">[] {
     const fileContents = fs.readFileSync(fullPath, "utf8");
     const { data } = matter(fileContents);
 
-    const slug = path.basename(fullPath).replace(/\.mdx$/, "").toLowerCase();
+    const slug = path.basename(fullPath).replace(/\.mdx$/, "");
     const category = path.basename(path.dirname(fullPath)); // 바로 상위 폴더 이름
-  
+    console.log(slug);
     return {
       slug,
       category: category,
@@ -70,7 +70,6 @@ export function getSortedPostsData(): Omit<Post, "content">[] {
       description: data.description,
     };
   });
-
   return allPostsData.filter((p)=>p.category!='posts').sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
@@ -84,8 +83,6 @@ export function getPostsByCategory(category: string) {
 
 
 export function getPostDatac(category: string, slug: string): Post | null{
-  slug = slug.toLowerCase();
-
   let targetPath: string;
 
   if (category && category.trim() !== "") {
@@ -115,7 +112,6 @@ export function getPostDatac(category: string, slug: string): Post | null{
 }
 
 export function getPostData(slug: string): Post {
-  slug = slug.toLowerCase();
   const filePaths = walkDir(postsDirectory);
 
   const fullPath = filePaths.find((p) =>
