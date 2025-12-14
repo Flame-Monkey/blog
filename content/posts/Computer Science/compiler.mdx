@@ -347,3 +347,19 @@ TABLE: 해당 생성규칙의 FIRST를 구하고서 해당 FIRST들에 생성규
 테이블 기반으로 button-up 파싱하는 기법입니다.
 
 # Code Generation
+
+# 데이터베이스 임시
+db api
+```c
+cursor(iterator)
+tier system
+conn, statement, Drivermanager, execQuery, getRsultSet(), result.next(), result.getstring(colname | colIndex), 
+first, last, next, previous, absolute, // result(cursor, iterator) 탐색
+prepare statement // 미리 SQL 작성해두고 내부에 ? 박아두고서 사용할 때 포맷
+
+
+// 인덱스 구조 - 보통 B+ 트리
+// 클러스티드 - B+ 트리 리프노드가 시퀀셜하게 배열 리스트로 돼 있음 -> 인덱스 기반으로 범위기반 접근이 빨라짐 
+// 논클러스티드 - 트리 분류에 의해 범위기반으로 접근 자체는 되는데 마지막 리프노드 접근할 때 메모리를 띄엄띄엄 접근하게 됨 
+
+// ER 모델

@@ -23,7 +23,7 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="text-xs text-gray-500">© {new Date().getFullYear()} Monkey. All rights reserved.</div>
+                <div className="text-xs text-gray-500">© {new Date().getFullYear()} crusthack. All rights reserved.</div>
             </div>
         </footer>
     );
