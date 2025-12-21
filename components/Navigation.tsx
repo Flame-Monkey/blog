@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function Navi({ categories }: { categories: string[] }) {
     const [open, setOpen] = useState(false);
@@ -24,6 +25,13 @@ export default function Navi({ categories }: { categories: string[] }) {
                         />
                         <p>Main</p>
                     </Link>
+                    <Image
+                        src="/images/Web/catbattle/a.jpg"
+                        alt="logo"
+                        width={100}
+                        height={40}
+                        className="object-contain"
+                    />
                 </div>
 
                 <div className="flex items-center justify-end px-6 gap-2">
