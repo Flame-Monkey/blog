@@ -58,16 +58,31 @@ export default async function Page({
   toc = extractTocFromMarkdown(postData!.content);
 
   // Resolve relative media paths (e.g., "a.jpg") to content/images/<category>/<slug>/a.jpg
-  const resolveMediaPath = (value: string | undefined) => {
-    if (!value) return undefined;
-    const v = String(value);
-    // Keep absolute, protocol, and hash links untouched
-    if (v.startsWith("/") || v.startsWith("http://") || v.startsWith("https://") || v.startsWith("#")) {
-      return v;
-    }
-    // Map to our file-serving route
-    return `/blogtemp/images/${encodeURIComponent(decodedCategory!)}/${encodeURIComponent(slug!)}/${v}`;
-  };
+const resolveMediaPath = (value: string | undefined) => {
+  if (!value) return undefined;
+
+  const v = String(value);
+
+  // absolute / external / hash links는 그대로
+  if (
+    v.startsWith("/") ||
+    v.startsWith("http://") ||
+    v.startsWith("https://") ||
+    v.startsWith("#")
+  ) {
+    return v;
+  }
+
+  // 확장자만 대문자로 변환
+  const upperExt = v.replace(/\.([a-z0-9]+)$/i, (_, ext) => {
+    return "." + ext.toUpperCase();
+  });
+
+  return `/blogtemp/images/${encodeURIComponent(decodedCategory!)}/${encodeURIComponent(
+    slug!
+  )}/${upperExt}`;
+};
+
 
   return (
     <div className="grid grid-cols-[1fr_1000px_1fr] gap-8 w-full">
