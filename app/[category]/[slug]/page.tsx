@@ -85,7 +85,18 @@ export default async function Page({
               img: (props) => {
                 const src = resolveMediaPath(props.src as any);
                 if (!src) return null;
-                return <Image {...props} src={src} alt={props.src} width={600} height={400}/>;
+                // Use a span (phrasing content) to avoid div inside p
+                return (
+                  <span className="relative block w-full aspect-[3/2]">
+                    <Image
+                      {...props}
+                      src={src}
+                      alt={props.alt ?? ""}
+                      fill
+                      className="object-contain"
+                    />
+                  </span>
+                );
               },
             }}
             options={{ mdxOptions }}
