@@ -7,6 +7,7 @@ import CodeBlockCopyButton from "@/components/CodeBlockCopyButton";
 import { TocItem, extractTocFromMarkdown } from "@/lib/extractToc";
 import CategorySidebar from "@/components/CategorySidebar";
 import type { Metadata } from "next";
+import Image from "next/image";
 
 // MDX plugins are provided via shared options
 
@@ -84,12 +85,7 @@ export default async function Page({
               img: (props) => {
                 const src = resolveMediaPath(props.src as any);
                 if (!src) return null;
-                return <img {...props} src={src} />;
-              },
-              a: (props: any) => {
-                const href = resolveMediaPath(props.href);
-                if (!href) return <span {...props} />; // render fallback without href
-                return <a {...props} href={href} />;
+                return <Image {...props} src={src} alt={props.src} width={600} height={400}/>;
               },
             }}
             options={{ mdxOptions }}
