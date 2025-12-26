@@ -1,129 +1,66 @@
-import { getPostData, getSortedPostsData } from "@/lib/posts";
-import BlogPost from "@/components/BlogPost";
-import PostToc from "@/components/PostToc";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import { mdxOptions } from "@/lib/mdxOptions";
-import CodeBlockCopyButton from "@/components/CodeBlockCopyButton";
-import { TocItem, extractTocFromMarkdown } from "@/lib/extractToc";
-import CategorySidebar from "@/components/CategorySidebar";
-import type { Metadata } from "next";
-import Image from "next/image";
-
-// MDX plugins are provided via shared options
-
+//  /app/[category]/[slug]/page.tsx`
+import { getPostData, getAllPostsData } from '@/lib/posts'
+import BlogPost from '@/components/BlogPost';
+import { notFound } from 'next/navigation';
+import { getTocFromMarkdown } from '@/lib/parseToc';
+import TOC from '@/components/TOC';
+import CategorySidebar from '@/components/CategorySidebar';
+import { Metadata } from 'next';
+ 
 export async function generateStaticParams() {
-  const posts = getSortedPostsData();
-  return posts.map((post) => ({
-    category: post.category,
-    slug: post.slug,
-  }));
+    const posts = getAllPostsData();
+    return posts.map((post) => ({
+        category: post.category,
+        slug: post.slug,
+    }));
 }
 
 export async function generateMetadata({
-  params,
+    params,
 }: {
-  params: Promise<{ category: string; slug: string }>;
+    params: Promise<{ category: string; slug: string }>;
 }): Promise<Metadata> {
-  const { category, slug } = await params;
-  const decodedCategory =
-    typeof category === "string"
-      ? decodeURIComponent(category).replace(/\+/g, " ").trim()
-      : category;
-  let post = getPostData(decodedCategory!, slug);
-
-  if (!post) {
-    post = getPostData("", "404");
-  }
-
-  return {
-    title: post!.title,
-    description: post!.description,
-  };
+    const { category, slug } = await params;
+    const decodedCategory =
+        typeof category === "string"
+            ? decodeURIComponent(category).replace(/\+/g, " ").trim()
+            : category;
+ 
+    let post = getPostData(decodedCategory, slug);
+    if (post === null) {
+        if (!post) {
+            post = getPostData("", "404");
+        }
+    }
+ 
+    return {
+        title: post!.title,
+        description: post!.description,
+    };
 }
-
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ category: string; slug?: string }>;
-}) {
-  const { category, slug } = await params;
-  const decodedCategory =
-    typeof category === "string"
-      ? decodeURIComponent(category).replace(/\+/g, " ").trim()
-      : category;
-
-  let postData = getPostData(decodedCategory!, slug!) ?? getPostData("", "404");
-  let toc: TocItem[] = [];
-
-  toc = extractTocFromMarkdown(postData!.content);
-
-  // Resolve relative media paths (e.g., "a.jpg") to content/images/<category>/<slug>/a.jpg
-const resolveMediaPath = (value: string | undefined) => {
-  if (!value) return undefined;
-
-  const v = String(value);
-
-  // absolute / external / hash links는 그대로
-  if (
-    v.startsWith("/") ||
-    v.startsWith("http://") ||
-    v.startsWith("https://") ||
-    v.startsWith("#")
-  ) {
-    return v;
-  }
-
-  // 확장자만 대문자로 변환
-  const upperExt = v.replace(/\.([a-z0-9]+)$/i, (_, ext) => {
-    return "." + ext.toUpperCase();
-  });
-
-  return `/blogtemp/images/${encodeURIComponent(decodedCategory!)}/${encodeURIComponent(
-    slug!
-  )}/${upperExt}`;
-};
-
-
-  return (
-    <div className="grid grid-cols-[1fr_1000px_1fr] gap-8 w-full">
-      <div className="flex justify-end">
-        <CategorySidebar category={decodedCategory} />
-      </div>
-
-      {/* 중간 콘텐츠 */}
-      <div className="w-full mx-auto">
-        <BlogPost post={postData!}>
-          <MDXRemote
-            source={postData!.content}
-            components={{
-              pre: (props) => <CodeBlockCopyButton {...props} />,
-              img: (props) => {
-                const src = resolveMediaPath(props.src as any);
-                if (!src) return null;
-                // Use a span (phrasing content) to avoid div inside p
-                return (
-                  <span className="relative block w-full aspect-[3/2]">
-                    <Image
-                      unoptimized
-                      {...props}
-                      src={src}
-                      alt={props.alt ?? ""}
-                      fill
-                      className="object-contain"
-                    />
-                  </span>
-                );
-              },
-            }}
-            options={{ mdxOptions }}
-          />
-        </BlogPost>
-      </div>
-
-      {/* 오른쪽 TOC → 클라이언트 컴포넌트 */}
-      <div className="flex justify-start">
-        <PostToc toc={toc} />
-      </div>
-    </div>
-  );
+ 
+export default async function Post({ params }: { params: Promise<{ category: string, slug: string }> }) {
+    const { category, slug } = await params
+ 
+    const postData = getPostData(category, slug);
+    if (postData === null) {
+        return notFound();
+    }
+    const toc = getTocFromMarkdown(postData.content);
+    return (
+        <div className="grid grid-cols-5 gap-8 w-full">
+            <div className="flex justify-end">
+                <CategorySidebar currentCategory={category} />
+            </div>
+ 
+            {/* 중앙 콘텐츠 */}
+            <div className="w-full mx-auto col-span-3 Markdown-body">
+                <BlogPost post={postData} />
+            </div>
+ 
+            <div className="flex justify-start">
+                <TOC toc={toc} />
+            </div>
+        </div>
+    )
 }

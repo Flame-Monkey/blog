@@ -1,39 +1,85 @@
 // components/BlogPost.tsx
-import { Post } from '@/lib/posts';
-import React from 'react'
+'ues client'
+import type { Post } from '@/lib/posts';
+import { MDXRemote } from 'next-mdx-remote/rsc'
+import remarkGfm from "remark-gfm";
+import rehypeKatex from "rehype-katex";
+import rehypeSlug from "rehype-slug";
+import remarkToc from 'remark-toc';
+import rehypePrettyCode from "rehype-pretty-code";
+import remarkMath from 'remark-math';
+import CodeBlock from '@/components/CodeBlock';
+import { DynamicImage } from '@/components/DynamicImage';
+import { isLocalDev, repoName } from '@/lib/config';
+
+const prettyOptions = {
+    theme: "github-dark",
+    keepBackground: true,
+};
 
 interface BlogPostProps {
-  post: Post
-  children: React.ReactNode
+    post: Post
 }
 
-export default function BlogPost({ post, children }: BlogPostProps) {
-  return (
-    <article className="w-full bg-gray-100 p-4 rounded-md">
+function resolveLink(href: string): string {
+    if (
+        href.startsWith("http://") ||
+        href.startsWith("https://") ||
+        href.startsWith("#")
+    ) {
+        return href;
+    }
 
-      {/* 제목/날짜 */}
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
-        <time className="text-gray-500">{post.date}</time>
+    const baseurl = isLocalDev ? `` : `/${repoName}`;
+    return `${baseurl}${href}`;
+}
 
-        <p className="mt-3 text-lg text-gray-600 leading-relaxed max-w-prose">
-          {post.description}
-        </p>
-      </header>
+export default function BlogPost({ post }: BlogPostProps) {
+    return (
+        <article className="w-full bg-gray-100 p-4 rounded-md min-h-screen">
+
+            {/* 제목/날짜 */}
+            <header className="mb-8">
+                <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
+                <time className="text-gray-500">{post.date}</time>
+
+                <p className="mt-3 text-lg text-gray-600 leading-relaxed max-w-prose">
+                    {post.description}
+                </p>
+            </header>
 
 
-      {/* 본문 전체 레이아웃 (flex + markdown-body) */}
-      <div className="bg-gray-100">
-        <div className="!bg-gray-100 p-6 rounded-md">
+            {/* 본문 전체 레이아웃 (flex + markdown-body) */}
+            <div className="bg-gray-100">
+                <div className="!bg-gray-100 p-6 rounded-md">
 
-          {/* markdown 본문 */}
-          <div className="markdown-body !bg-gray-100">
-            {children}
-          </div>
+                    {/* markdown 본문 */}
+                    <div className="markdown-body !bg-gray-100">
+                        <MDXRemote
+                            source={post.content}
+                            components={{
+                                pre: (props) => <CodeBlock {...props} />,
+                                img: (props) => <DynamicImage category={post.category} slug={post.slug} {...props} />,
+                                ul: (props) => <ul className="list-disc space-y-2 ml-6 my-4" {...props} />,
+                                ol: (props) => <ol className="list-decimal space-y-2 ml-6 my-4" {...props} />,
+                                a: (props) => {
+                                    const href = props.href || '';
+                                    const url = resolveLink(href);
+                                    return <a {...props} href={url} />;
+                                }
+                            }}
+                            options={{
+                                mdxOptions: {
+                                    remarkPlugins: [remarkGfm, remarkToc, remarkMath],
+                                    rehypePlugins: [[rehypePrettyCode, prettyOptions], rehypeSlug, rehypeKatex],
+                                },
+                            }}
+                        />
+                    </div>
 
-        </div>
-      </div>
+                </div>
+            </div>
 
-    </article>
-  );
+        </article>
+    );
 }

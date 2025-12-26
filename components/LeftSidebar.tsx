@@ -1,16 +1,19 @@
+// /components/LeftSidebar.tsx
 import Link from "next/link";
-import { getAllCategories, getSortedPostsData } from "@/lib/posts";
-
+import { getAllPostsData } from "@/lib/posts";
+ 
 export default function LeftSidebar() {
-  const allPosts = getSortedPostsData();
+  const allPosts = getAllPostsData();
   const recentPosts = allPosts.slice(0, 3);
-  const categories = getAllCategories();
+  const categories: string[] = Array.from(
+    new Set(allPosts.map((post) => post.category).filter((cat): cat is string => Boolean(cat)))
+  ).sort();
   const counts = allPosts.reduce<Record<string, number>>((acc, p) => {
     const cat = p.category ?? "";
     acc[cat] = (acc[cat] ?? 0) + 1;
     return acc;
   }, {});
-
+ 
   return (
     <aside className="sticky top-20 space-y-2 mt-2">
       <section>
@@ -28,7 +31,7 @@ export default function LeftSidebar() {
           ))}
         </ul>
       </section>
-
+ 
       <section>
         <h2 className="font-bold text-xl mt-5 mb-3">카테고리 목록</h2>
         <ul className="space-y-1">

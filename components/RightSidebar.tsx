@@ -1,13 +1,13 @@
 import Link from "next/link";
-import { getSortedPostsData } from "@/lib/posts";
-import { usefulLinks } from "@/lib/usefulLinks";
-
+import { getAllPostsData } from "@/lib/posts";
+import { usefulLinks } from "@/lib/config";
+ 
 export default function RightSidebar() {
-  const allPosts = getSortedPostsData();
+  const allPosts = getAllPostsData();
   const recentProjectPosts = allPosts
     .filter((p) => p.category === "Project")
     .slice(0, 5);
-
+ 
   return (
     <aside className="sticky top-20 space-y-2 mt-2">
       <section>
@@ -28,7 +28,7 @@ export default function RightSidebar() {
           )}
         </ul>
       </section>
-
+ 
       <section>
         <h2 className="font-bold text-xl mt-5 mb-3">유용한 사이트</h2>
         <ul className="space-y-1">

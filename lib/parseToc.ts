@@ -1,3 +1,4 @@
+// /lib/extractToc.ts
 import { slug } from "github-slugger";
 
 export interface TocItem {
@@ -8,7 +9,7 @@ export interface TocItem {
   topLevelId: string | null;
 }
 
-export function extractTocFromMarkdown(content: string): TocItem[] {
+export function getTocFromMarkdown(content: string): TocItem[] {
   const toc: TocItem[] = [];
   const usedIds = new Map<string, number>(); // 중복 slug 카운트 저장
 
